@@ -82,20 +82,73 @@
             document.querySelector('#thumbnailList').innerHTML = ""
 
             // display the new cards
+            let searchResult = [];
             giffyData.data.forEach( function( giffy ){
                 const imageUrl = giffy.images.preview_gif.url;
                 insertCard( '', imageUrl )
+                searchResult.push( imageUrl )
             })
+
+            // cache the result, and store searchTopic + giffy list to localStorage
+            localStorage.giffySearch = JSON.stringify( {
+                searchTopic,
+                searchResult
+            } ) // '{"searchTopic":"raining","searchResult":[....]}'
+
+            return giffyData.data;
+        }
+
+        async function inParallel(){
+            const api_key = 'hntJRMedEtJ5PpCRoH7MZL9KIpJz4L0m'
+            const url = `https://api.giphy.com/v1/gifs/search?api_key=${api_key}&q=${searchTopic}`;
+            const giffyFetch = fetch( url ).then( response=>response.json() )
+
+            const apiKey = '4336e1913d44bd04e113009be683a0fc';
+            const url2 = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${apiKey}`
+            const weatherFetch =  fetch( url2 ).then( response=>response.json() )
+
+            // run them in SERIES
+            await giffyFetch
+            await weatherFetch
+
+            // run them in PARALLEL, and THEN continue after that
+            const [giffyResult, weatherResult ] = await Promise.all( [giffyFetch, weatherFetch])
+            console.log( `all the promises have completed` )
         }
 
         // main function
         (async function(){
+            // check if localStorage exists and use those results, instead of hitting api
+            if( localStorage.giffySearch ){
+                const savedSearch = JSON.parse( localStorage.giffySearch )
+                // localStorage.setItem( key, value ) ===> localStorage.((key)) = value | localStorage[key] = value
+                // localStorage.getItem( key ) ==> localStroage.((key)) | localStorage[key]
+
+                document.querySelector('#searchTopic').value = savedSearch.searchTopic;
+
+                // show
+                imageList = savedSearch.searchResult;
+                for( let i=0; i<imageList.length; i++ ){
+                    const imageUrl = imageList[i]
+                    insertCard( '', imageUrl )
+                }
+
+                return
+            }
             const weatherDescription = await getCurrentWeather( "Toronto,Canada" )
 
             // save the weather description into the search topic
             document.querySelector('#searchTopic').value = weatherDescription
 
             displayGiffys();
+
+            // wait for weather and giffy results in parallel
+
+            const weatherResult = await getCurrentWeather( "Toronto,Canada" )
+            const giffyResult = await displayGiffys()
+
+            // the parallel example:
+            // inParallel()
         })()
 
 
