@@ -60,7 +60,7 @@
         function insertCard( title, imageUrl ){
             document.querySelector('#thumbnailList').innerHTML += 
                 `
-                    <div class="col">
+                    <div class="col-3">
                         <div class="card h-100">
                             <img src="${imageUrl}" class="card-img-top">
                             <div class="card-body">
@@ -78,7 +78,10 @@
             const url = `https://api.giphy.com/v1/gifs/search?api_key=${api_key}&q=${searchTopic}`;
             const giffyData = await fetch( url ).then( response=>response.json() )
 
-            console.log( `giffy result: `, giffyData.data )
+            // clear the cards
+            document.querySelector('#thumbnailList').innerHTML = ""
+
+            // display the new cards
             giffyData.data.forEach( function( giffy ){
                 const imageUrl = giffy.images.preview_gif.url;
                 insertCard( '', imageUrl )
@@ -89,12 +92,10 @@
         (async function(){
             const weatherDescription = await getCurrentWeather( "Toronto,Canada" )
 
-
-
             // save the weather description into the search topic
             document.querySelector('#searchTopic').value = weatherDescription
 
-            console.log( `weatherDescription: `, weatherDescription )
+            displayGiffys();
         })()
 
 
