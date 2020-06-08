@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giffy mania</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+</head>
+<body>
+    <style>
+        .card-img-top { 
+            height: 20vh; 
+            object-fit: cover;
+        }
+
+        .img-main {
+            height: 50vh;
+            width: 100%;
+            object-fit: cover;
+        }
+    </style>
+
+    <div class="container">
+        <div class="jumbotron">
+            <h1 id='leaderboardTitle' class="display-4">Giffy Mania</h1>
+            <hr class="my-4">
+            <div id='thumbnailList' class="row">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // proof concept test: 
+        // we got giffys for some key weather conditions (raining, thunderstorms)
+        // https://api.giphy.com/v1/gifs/search?api_key=hntJRMedEtJ5PpCRoH7MZL9KIpJz4L0m&q=rain
+
+
+        function insertCard( title, imageUrl ){
+            document.querySelector('#thumbnailList').innerHTML += 
+                `
+                    <div class="col">
+                        <div class="card h-100">
+                            <img src="${imageUrl}" class="card-img-top">
+                            <div class="card-body">
+                            <h5 class="card-title">${title}</h5>
+                            </div>
+                        </div>  
+                    </div>
+                `;        
+        }
+
+        insertCard( "rain GIF", "https://media1.giphy.com/media/5torEEM8QnR95Cqg11/giphy.gif?cid=f2c9def3458c566a48d35236f6540cc491f90dfbb8638be4&rid=giphy.gif")
+    </script>    
+</body>
+</html>
