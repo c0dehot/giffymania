@@ -27,9 +27,9 @@
 
             <form>
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="Search topic">
+                    <input id="searchTopic" type="text" class="form-control" placeholder="Search topic">
                     <div class="input-group-append">
-                      <button class="btn btn-primary" type="button" id="button-addon2">Search</button>
+                      <button onClick="displayGiffys()" class="btn btn-primary" type="button" id="button-addon2">Search</button>
                     </div>
                   </div>
               </form>       
@@ -71,11 +71,26 @@
                 `;        
         }
 
+        async function displayGiffys(){
+            const searchTopic = document.querySelector('#searchTopic').value;
+
+            const api_key = 'hntJRMedEtJ5PpCRoH7MZL9KIpJz4L0m'
+            const url = `https://api.giphy.com/v1/gifs/search?api_key=${api_key}&q=${searchTopic}`;
+            const giffyData = await fetch( url ).then( response=>response.json() )
+
+            console.log( `giffy result: `, giffyData )
+        }
+
         // main function
         (async function(){
             const weatherDescription = await getCurrentWeather( "Toronto,Canada" )
 
-            console.log( `weatherDescription: `, weatherDescription );
+
+
+            // save the weather description into the search topic
+            document.querySelector('#searchTopic').value = weatherDescription
+
+            console.log( `weatherDescription: `, weatherDescription )
         })()
 
 
