@@ -78,7 +78,11 @@
             const url = `https://api.giphy.com/v1/gifs/search?api_key=${api_key}&q=${searchTopic}`;
             const giffyData = await fetch( url ).then( response=>response.json() )
 
-            console.log( `giffy result: `, giffyData )
+            console.log( `giffy result: `, giffyData.data )
+            giffyData.data.forEach( function( giffy ){
+                const imageUrl = giffy.images.preview_gif.url;
+                insertCard( '', imageUrl )
+            })
         }
 
         // main function
