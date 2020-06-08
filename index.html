@@ -50,10 +50,11 @@
             const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${apiKey}`
             const weatherData = await fetch( url ).then( response=>response.json() )
 
-            console.log( `run just after the fetch is executed`, weatherData )
+            // console.log( `run just after the fetch is executed`, weatherData )
 
             // return the actual weather description
-            return currentWeather.weather[0].description;
+            console.log( `[getCurrentWeather]: ${weatherData.weather[0].description}` )
+            return weatherData.weather[0].description;
         }
 
         function insertCard( title, imageUrl ){
@@ -70,9 +71,12 @@
                 `;        
         }
 
-        const currentWeather = getCurrentWeather( "Toronto,Canada" )
+        // main function
+        (async function(){
+            const weatherDescription = await getCurrentWeather( "Toronto,Canada" )
 
-        console.log( `currentWeather: `, currentWeather );
+            console.log( `weatherDescription: `, weatherDescription );
+        })()
 
 
         insertCard( "rain GIF", "https://media1.giphy.com/media/5torEEM8QnR95Cqg11/giphy.gif?cid=f2c9def3458c566a48d35236f6540cc491f90dfbb8638be4&rid=giphy.gif")
